@@ -1,0 +1,40 @@
+{
+	"name": "skelly",
+	"version": "0.0.0",
+	"author": "CoderPuppy",
+
+	"main": "node.js",
+	"browser": "browser.js",
+
+	"dependencies": {
+		"sockjs-client-node": "*",
+		"dom-temple"        : "*",
+		"live-data"         : "*",
+		"ansi-font"         : "*",
+		"ecstatic"          : "*",
+		"through"           : "*",
+		"connect"           : "*",
+		"primus"            : "*",
+		"sockjs"            : "*",
+		"debug"             : "*",
+		"muxy"              : "*",
+
+		"stream-serializer": "~1.1.2",
+    "scuttlebucket": "~0.2.3",
+    "scuttlebutt": "~5.6.8",
+    "r-value": "~1.1.5",
+    "between": "~0.1.3",
+    "r-array": "~0.5.1",
+    "hat": "0.0.3"
+	},
+
+	"devDependencies": {
+		"LiveScript": "*",
+		"nodemon"   : "*"
+	},
+
+	"scripts": {
+		"watch-ls": "lsc -cw . & lsc -cw test",
+		"build-ls": "lsc -c . & lsc -cw test"
+	}
+}
