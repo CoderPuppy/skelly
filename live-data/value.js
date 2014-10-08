@@ -5,9 +5,9 @@
   RValue = require('r-value');
   LValue = (function(superclass){
     var prototype = extend$((import$(LValue, superclass).displayName = 'LValue', LValue), superclass).prototype, constructor = LValue;
-    function LValue(defaultVal, force){
+    function LValue(defaultVal, val){
       var this$ = this;
-      force == null && (force = false);
+      val == null && (val = true);
       LValue.superclass.call(this);
       this._sb = new RValue;
       this._sb.on('update', function(data){
@@ -17,16 +17,20 @@
         return this$.emit('_update', update);
       });
       if (defaultVal != null) {
-        this.set(defaultVal);
+        if (val) {
+          this.set(defaultVal);
+        } else {
+          this._update(defaultVal);
+        }
       }
     }
     prototype.creationArgs = function(){
-      return [this.get()];
+      return [this._sb._history[this._sb._history.length - 1], false];
     };
     LValue.mapCreationArgs = function(fn, args){
       var subArgs;
       subArgs = slice$.call(arguments, 2);
-      return [fn.apply(null, [args[0]].concat(slice$.call(subArgs)))];
+      return [[fn.apply(null, [args[0][0]].concat(slice$.call(subArgs))), args[0][1], args[0][2]], args[1]];
     };
     prototype.set = function(newValue){
       if (this.get() !== newValue) {

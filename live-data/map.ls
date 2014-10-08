@@ -7,7 +7,7 @@ class LMap extends LBase
 		super!
 		@db = {}
 		@_hist       = {}
-		@_historyMap = {}
+		@_history-map = {}
 
 	_prefix: (key) ->
 		key = "#{@opts.prefix}:#{key}" if @opts.prefix?
@@ -29,10 +29,10 @@ class LMap extends LBase
 
 		model.on \_update, ~>
 			if @db[key] == model
-				@localUpdate [ 'c', key, it ]
+				@local-update [ 'c', key, it ]
 
 		if update
-			@localUpdate [ 'd', key, model.constructor.name.to-lower-case!, model.creation-args! ]
+			@local-update [ 'd', key, LBase.from(model) ]
 
 	set: (key, model) ->
 		key = @_prefix key
@@ -48,7 +48,7 @@ class LMap extends LBase
 			when 'c'
 				return false unless @_checkPrefix data[1]
 
-				@_historyMap["#{data[1]}-#{data[2][2]}-#{data[2][1]}"] = update
+				@_history-map["#{data[1]}-#{data[2][2]}-#{data[2][1]}"] = update
 
 				@db[data[1]]?._update(data[2])
 
@@ -60,11 +60,12 @@ class LMap extends LBase
 
 				@_hist[data[1]] = update
 
-				if data[2] == null
-					delete @db[data[1]]
-				else
-					unless @db[data[1]]?
-						@_register data[1], LBase.create(data[2], ...data[3]), false
+				unless update[2] == @id
+					if data[2]?
+						unless @db[data[1]]? and LBase.type(@db[data[1]]) == data[2][0]
+							@_register data[1], LBase.create(...data[2]), false
+					else
+						delete @db[data[1]]
 
 				true
 
@@ -77,8 +78,11 @@ class LMap extends LBase
 			if !~hist.indexOf(update) && filter(update, sources)
 				hist.push update
 
-		for key, val of @_db
-			hist = hist.concat val.history(sources).map((update) ~> @_historyMap["#{key}-#{update[2]}-#{update[1]}"])
+		for key, val of @db
+			console.log 'key:', key, 'hist: ', val.history({}), 'val:', val
+			hist = hist.concat val.history({}).map((update) ~> @_history-map["#{key}-#{update[2]}-#{update[1]}"]).filter(-> filter(it, sources))
+
+		console.log hist
 
 		hist.filter(Boolean).sort utils.order
 

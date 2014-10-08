@@ -6,6 +6,7 @@
   Client = require('./client');
   exports.App = require('./app');
   exports.Client = Client;
+  exports.View = require('./view');
   exports.connect = function(app){
     var a, primus, stream, client;
     a = slice$.call(arguments, 1);

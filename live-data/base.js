@@ -18,6 +18,12 @@
         return (t = typeof result)  == "object" || t == "function" ? result || child : child;
   })(ref$[name], args, function(){}) : void 8;
     };
+    LBase.from = function(val){
+      return [LBase.type(val)].concat(slice$.call(val.creationArgs()));
+    };
+    LBase.type = function(val){
+      return val.constructor.name.toLowerCase();
+    };
     prototype.pipe = function(dest){
       this.createReadStream().pipe(dest.createWriteStream());
       return dest;
@@ -32,6 +38,9 @@
   })(this.constructor, this.constructor.mapCreationArgs(fn, this.creationArgs()), function(){});
       this.createReadStream().pipe((ref$ = this.constructor).mapper.apply(ref$, [fn].concat(slice$.call(args)))).pipe(newLive.createWriteStream());
       return newLive;
+    };
+    prototype.clone = function(){
+      return constructor.create.apply(constructor, constructor.from(this));
     };
     prototype.creationArgs = utils.dutyOfSubclass('creationArgs');
     prototype.applyUpdate = utils.dutyOfSubclass('applyUpdate');

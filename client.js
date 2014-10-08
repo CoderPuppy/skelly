@@ -19,12 +19,6 @@
       this.store = new ldata.MapView(this.rawStore, {
         prefix: 'client'
       });
-      this.stream.on('data', function(d){
-        return console.log('data:', d);
-      });
-      this.rawStore.on('_update', function(u){
-        return console.log('raw-store updated:', u);
-      });
       this.rawStore.pipe(this.app.store).pipe(this.rawStore);
       this.stream.pipe(this.rawStore.createStream()).pipe(this.stream);
     }

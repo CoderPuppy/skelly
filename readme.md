@@ -13,7 +13,6 @@
 **Long Term:**
 - Publish live-binders
 - alive-temple
-- Rewrite live-data.Array to not use r-array, it's just annoying
 
 ## Implementation Overview:
 

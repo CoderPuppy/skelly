@@ -2,19 +2,22 @@ LBase  = require \./base
 RValue = require \r-value
 
 class LValue extends LBase
-	(defaultVal, force = false) ->
+	(defaultVal, val = true) ->
 		super!
 		@_sb = new RValue
 		@_sb.on 'update', (data) ~> @emit 'update', data
 		@_sb.on '_update', (update) ~> @emit '_update', update
 
 		# TODO: Fix this
-		if defaultVal? # and force
-			# @defaultVal = null
-			@set defaultVal
+		if defaultVal?
+			if val
+				# @defaultVal = null
+				@set defaultVal
+			else
+				@_update defaultVal
 
-	creationArgs: -> [@get!]
-	@mapCreationArgs = (fn, args, ...subArgs) -> [ fn(args[0], ...subArgs) ]
+	creationArgs: -> [@_sb._history[@_sb._history.length - 1], false]
+	@mapCreationArgs = (fn, args, ...subArgs) -> [ [ fn(args[0][0], ...subArgs), args[0][1], args[0][2] ], args[1] ]
 
 	set: (newValue) ->
 		if @get! != newValue

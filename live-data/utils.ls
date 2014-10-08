@@ -1,3 +1,5 @@
+between = require \between
+
 exports.order = (a, b) ->
 	# timestamp, then source
 	between.strord(a[1], b[1]) || between.strord(a[2], b[2])

@@ -6,8 +6,9 @@ through = require \through
 Primus  = require \./library
 Client  = require \./client
 
-exports.App = require \./app
+exports.App    = require \./app
 exports.Client = Client
+exports.View   = require \./view
 
 exports.connect = (app, ...a) ->
 	primus = new Primus()

@@ -10,6 +10,12 @@ class LBase extends Scuttlebutt
 	@create = (name, ...args) ->
 		new @types[name]?(...args)
 
+	@from = (val) ~>
+		[ @type(val), ...val.creation-args! ]
+
+	@type = (val) ~>
+		val.constructor.name.to-lower-case!
+
 	pipe: (dest) ->
 		@createReadStream!.pipe(dest.createWriteStream!)
 		dest
@@ -21,14 +27,17 @@ class LBase extends Scuttlebutt
 
 		newLive
 
+	clone: ->
+		@@create(...@@from(@))
+
 	# What args to pass to the constructor when initially replicating it
 	creationArgs: utils.dutyOfSubclass 'creationArgs'
 	# Map the creation args
-	# @mapCreationArgs: utils.dutyOfSubclass '@mapCreationArgs'
+	# @mapCreationArgs = utils.dutyOfSubclass '@mapCreationArgs'
 
 	# It must keep the custom property of any object that comes through
 	# Returns: A through stream that takes json and transforms it
-	# @mapper: utils.dutyOfSubclass '@mapper'
+	# @mapper = utils.dutyOfSubclass '@mapper'	
 
 	# Scuttlebutt Stuff
 	applyUpdate: utils.dutyOfSubclass 'applyUpdate'
